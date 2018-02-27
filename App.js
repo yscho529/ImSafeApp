@@ -11,13 +11,13 @@ import {
   Text,
   View
 } from 'react-native';
-import Login from './src/components/Login/Login'
-
+import Login from './src/components/Login/Login';
+import { Tabs } from './src/config/router';
 
 export default class App extends Component<Props> {
   render() {
     return (
-      <Login />
+      <Tabs />
     );
   }
 }
