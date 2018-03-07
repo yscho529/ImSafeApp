@@ -15,5 +15,12 @@ export const Tabs = TabNavigator({
     Message: {
         screen: Message,
     }
+}, {
+    tabBarOptions: {
+        style: {
+            backgroundColor: '#25CCF7'
+        }
+    }
+
 });
 

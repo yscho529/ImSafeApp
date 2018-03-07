@@ -5,19 +5,18 @@ var Contacts = require('react-native-contacts')
 // create a component
 export default class ContactsPage extends Component {
     render() {
-        
-        Contacts.getAll((err,contacts) => {
-            console.log(contacts)
-        })
 
         Contacts.requestPermission((err, permission) => {
-            console.log("Asked permission")
-            console.log(permission)
+            console.log("Permission Level: " + permission)
+        });
+
+        Contacts.getAll((err,contacts) => {
+            console.log("Number of contacts: " + contacts.length)
         });
 
         return (
             <View style={styles.container}>
-                
+                <Text>Contacts</Text>
             </View>
         );
     }
