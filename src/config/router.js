@@ -16,4 +16,3 @@ export const Tabs = TabNavigator({
         screen: Message,
     }
 });
-
