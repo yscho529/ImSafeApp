@@ -14,6 +14,10 @@ export default class ContactsPage extends Component {
             console.log("Number of contacts: " + contacts.length)
         });
 
+        Contacts.getAll((err,contacts) => {
+            console.log(contacts.length)
+        });
+
         return (
             <View style={styles.container}>
                 <Text>Contacts</Text>

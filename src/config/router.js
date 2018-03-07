@@ -21,6 +21,4 @@ export const Tabs = TabNavigator({
             backgroundColor: '#25CCF7'
         }
     }
-
 });
-
