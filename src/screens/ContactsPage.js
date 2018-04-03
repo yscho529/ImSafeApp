@@ -7,8 +7,11 @@ export default class ContactsPage extends Component {
     render() {
 
         Contacts.requestPermission((err, permission) => {
-            console.log("Asked permission")
-            console.log(permission)
+            console.log("Permission Level: " + permission)
+        });
+
+        Contacts.getAll((err,contacts) => {
+            console.log("Number of contacts: " + contacts.length)
         });
 
         Contacts.getAll((err,contacts) => {
@@ -17,7 +20,7 @@ export default class ContactsPage extends Component {
 
         return (
             <View style={styles.container}>
-                
+                <Text>Contacts</Text>
             </View>
         );
     }
