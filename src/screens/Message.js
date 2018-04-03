@@ -18,7 +18,7 @@ export default class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          text: 'Hey, this is login.name and I am in an emergency situation right now and I need help!! My current location is location.current.',
+          text: 'Hey, this is Paul and I am in an emergency situation right now and I need help!!',
           latitude: null,
           longitude: null,
           error: null,
@@ -46,15 +46,13 @@ export default class Message extends Component {
                     multiline = {true}
                     numberOfLines = {1}
                     onChangeText={(text) => this.setState({text})}
-                    value={this.state.text}
+                    value={this.state.text + ' My current location is https://www.google.com/maps/@'
+                        + this.state.latitude + ',' + this.state.longitude + ',15z'}
                 />
                 <Button onPress={this._handlePress}
                     title="Save"
                     color="#25CCF7"
                 />
-                <Text>Latitude: {this.state.latitude}</Text>
-                <Text>Longitude: {this.state.longitude}</Text>
-                {this.state.error ? <Text>Error: {this.state.error}</Text> : null}
             </View>
         );
     }
