@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import SmsAndroid  from 'react-native-get-sms-android';
 
 
 class CustomMessage extends Component {
@@ -58,7 +59,12 @@ export default class Message extends Component {
     }
 
     _handlePress(event) {
-        console.log("PRESSED");
+        // console.log("PRESSED");
+        SmsAndroid.autoSend('2018038244', 'Test message', (fail) => {
+            console.log("Failed with this error: " + fail)
+        }, (success) => {
+            console.log("SMS sent successfully");
+        });
     }
 }
 
