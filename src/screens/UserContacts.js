@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TouchableHighlight } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Contacts from 'react-native-contacts';
+import { StackNavigator } from 'react-navigation';
 
 // create a component
 export default class UserContacts extends Component {
@@ -28,6 +29,20 @@ export default class UserContacts extends Component {
                 })
                 console.log(contacts)
                 this.setState({ allContacts: contacts.sort() });
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
+                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
             }
         });
     }
@@ -54,8 +69,12 @@ export default class UserContacts extends Component {
     }
 
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
+                <View style={styles.heading}>
+                    <Text style={{fontWeight: 'bold'}}>Select contacts to add</Text>
+                </View>
                  <FlatList data={this.state.allContacts} 
                         keyExtractor={item => item.recordID} 
                         extraData={this.state} 
@@ -104,6 +123,20 @@ export default class UserContacts extends Component {
                                 </View>
                             </TouchableOpacity>
                 }}/>
+                <View style={styles.buttons}>
+                    <View style={styles.button}>
+                        <Button onPress={() => { navigate('ContactsPage') }}
+                            title="Cancel"
+                            color="#FD7272"
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button onPress={console.log("a")}
+                            title="Add"
+                            color="#3B3B98"
+                        />
+                    </View>
+                </View>
             </View>
         );
     }
@@ -114,5 +147,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    heading: {
+        padding: 20,
+        borderBottomWidth: 1,
+        borderStyle: 'solid',
+        borderColor: 'rgba(88, 177, 159, 0.2)',
+    },
+    buttons: {
+        flexDirection: 'row',
+        backgroundColor: '#3B3B98',
+    },
+    button: {
+        width: '50%',
+    }
 });
 
