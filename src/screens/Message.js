@@ -18,7 +18,8 @@ export default class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          text: 'Hey, this is Paul and I am in an emergency situation right now and I need help!!',
+          text: 'Hey, this is Paul. I am in an emergency situation right now and I need help!'
+            + ' My current location is https://www.google.com/maps/search/?api=1&query=',
           latitude: null,
           longitude: null,
           error: null,
@@ -29,6 +30,7 @@ export default class Message extends Component {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             this.setState({
+              text: this.state.text + position.coords.latitude + ',' + position.coords.longitude,
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
               error: null,
@@ -46,10 +48,9 @@ export default class Message extends Component {
                     multiline = {true}
                     numberOfLines = {1}
                     onChangeText={(text) => this.setState({text})}
-                    value={this.state.text + ' My current location is https://www.google.com/maps/@'
-                        + this.state.latitude + ',' + this.state.longitude + ',15z'}
+                    value={this.state.text}
                 />
-                <Button onPress={this._handlePress(this)}
+                <Button onPress={this.save.bind(this)}
                     title="Save"
                     color="#25CCF7"
                 />
@@ -57,7 +58,7 @@ export default class Message extends Component {
         );
     }
 
-    _handlePress(event) {
+    save(event) {
         console.log("PRESSED");
         SmsAndroid.autoSend('6786779310', this.state.text, (fail) => {
             console.log("Failed with this error: " + fail)

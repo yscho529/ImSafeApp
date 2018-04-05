@@ -49,6 +49,7 @@
 		E40EB491D9B74C3FB1EF725F /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1DCC06EB05547668F0A1D49 /* Octicons.ttf */; };
 		C61083936EDB48D1B15A9447 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3D174ABB9D7544D493190D64 /* SimpleLineIcons.ttf */; };
 		7E369D80D9E047E7B70CB17B /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6915BECC86B54413981C390B /* Zocial.ttf */; };
+		9D4C623854F7481D8898D4DB /* libBleManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C402C03EBD4B89830A0841 /* libBleManager.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -313,6 +314,8 @@
 		E1DCC06EB05547668F0A1D49 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		3D174ABB9D7544D493190D64 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		6915BECC86B54413981C390B /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B4487AD14DDD441AB37A4413 /* BleManager.xcodeproj */ = {isa = PBXFileReference; name = "BleManager.xcodeproj"; path = "../node_modules/react-native-ble-manager/ios/BleManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		79C402C03EBD4B89830A0841 /* libBleManager.a */ = {isa = PBXFileReference; name = "libBleManager.a"; path = "libBleManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -343,6 +346,7 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				399428D81CD14FE294A464FE /* libRCTContacts.a in Frameworks */,
 				5D4434B0A2494FCAA2BB7B4B /* libRNVectorIcons.a in Frameworks */,
+				9D4C623854F7481D8898D4DB /* libBleManager.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +526,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				F507999814CA4744AC13B180 /* RCTContacts.xcodeproj */,
 				ED96796228424E16A4D307B3 /* RNVectorIcons.xcodeproj */,
+				B4487AD14DDD441AB37A4413 /* BleManager.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1125,11 +1130,13 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 				);
 			};
 			name = Debug;
@@ -1152,11 +1159,13 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 				);
 			};
 			name = Release;
@@ -1180,6 +1189,7 @@
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 				);
 			};
 			name = Debug;
@@ -1202,6 +1212,7 @@
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 				);
 			};
 			name = Release;
@@ -1233,11 +1244,13 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 				);
 			};
 			name = Debug;
@@ -1269,11 +1282,13 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 					"$(SRCROOT)\..\node_modules\react-native-vector-icons\RNVectorIconsManager",
+					"$(SRCROOT)\..\node_modules\react-native-ble-manager\ios",
 				);
 			};
 			name = Release;
@@ -1300,6 +1315,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1324,6 +1340,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
