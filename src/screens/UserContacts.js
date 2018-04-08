@@ -29,20 +29,6 @@ export default class UserContacts extends Component {
                 })
                 console.log(contacts)
                 this.setState({ allContacts: contacts.sort() });
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
-                this.state.allContacts.push({ givenName: 'test', familyName: 't', phoneNumbers: [{number: '1254125'}]});
             }
         });
     }
