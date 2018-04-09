@@ -5,9 +5,13 @@ import {
     StyleSheet,
     AppRegistry,
     TouchableHighlight,
+    ListView,
     ScrollView,
 } from 'react-native';
+
 import BleManager from 'react-native-ble-manager';
+
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 // create a component
 export default class Devices extends Component {
@@ -21,6 +25,7 @@ export default class Devices extends Component {
           appState: ''
         }
     }
+
     componentDidMount() {
         BleManager.start({showAlert: false});
     }
@@ -47,7 +52,10 @@ export default class Devices extends Component {
         }
         });
     }
+
     render() {
+        const list = Array.from(this.state.peripherals.values());
+        const dataSource = ds.cloneWithRows(list);
         return (
             <View style={styles.container}>
                 <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
@@ -56,6 +64,28 @@ export default class Devices extends Component {
                 <TouchableHighlight style={{marginTop: 0,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.retrieveConnected() }>
                 <Text>Retrieve connected peripherals</Text>
                 </TouchableHighlight>
+                <ScrollView style={styles.scroll}>
+                    {(list.length == 0) &&
+                        <View style={{flex:1, margin: 20}}>
+                        <Text style={{textAlign: 'center'}}>No peripherals</Text>
+                        </View>
+                    }
+                    <ListView
+                        enableEmptySections={true}
+                        dataSource={dataSource}
+                        renderRow={(item) => {
+                        const color = item.connected ? 'green' : '#fff';
+                        return (
+                            <TouchableHighlight>
+                            <View style={[styles.row, {backgroundColor: color}]}>
+                                <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
+                                <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 10}}>{item.id}</Text>
+                            </View>
+                            </TouchableHighlight>
+                        );
+                        }}
+                    />
+                </ScrollView>
             </View>
         );
     }
