@@ -68,6 +68,24 @@ export default class UserContacts extends Component {
         this.props.navigation.navigate('ContactsPage');
     }
 
+    contactRender(item) {
+        return (item !== "undefined" && 
+                item.givenName !== "undefined" && 
+                item.familyName !== "undefined" && 
+                item.phoneNumbers.length > 0 &&
+                item.phoneNumbers[0].number !== "undefined" ? 
+                (
+                    <Text style={{
+                        fontWeight: 'bold'
+                        }}>
+                        {item.familyName} {item.givenName}
+                        <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.phoneNumbers[0].number}</Text>
+                    </Text>
+                ) : (
+                    <Text>undefined</Text>
+                ));
+    }
+
     render() {
         const { navigate } = this.props.navigation;
         return (
@@ -94,19 +112,7 @@ export default class UserContacts extends Component {
                                     alignItems: 'flex-start',
                                     justifyContent: 'center'
                                 }}>
-                                    {item.check
-                                    ? (
-                                        <Text style={{
-                                        fontWeight: 'bold'
-                                        }}>{`${item.familyName} ${item.givenName}`}
-                                            <Text style={{color: 'rgba(0,0,0,0.3)'}}>{`   ${item.phoneNumbers[0].number}`}</Text>
-                                        </Text>
-                                    )
-                                    : (
-                                        <Text>{`${item.familyName} ${item.givenName}`}
-                                            <Text style={{color: 'rgba(0,0,0,0.3)'}}>{`   ${item.phoneNumbers[0].number}`}</Text>
-                                        </Text>
-                                    )}
+                                    {this.contactRender(item)}
                                 </View>
                                 <View style={{
                                     flex: 1,
