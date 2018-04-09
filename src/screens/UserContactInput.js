@@ -13,6 +13,7 @@ export default class UserContactInput extends Component {
             name: "",
             number: "",
             newContact: {
+                recordID: "",
                 familyName: "",
                 givenName: "",
                 phoneNumbers: [{

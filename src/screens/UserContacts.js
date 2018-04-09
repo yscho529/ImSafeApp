@@ -29,7 +29,13 @@ export default class UserContacts extends Component {
                     return contacts;
                 })
                 console.log(contacts)
-                this.setState({ allContacts: contacts.sort() });
+                this.setState({ 
+                    allContacts: contacts.sort(
+                        (a,b) => {
+                            return a.givenName.localeCompare(b.givenName)
+                        }
+                    ) 
+                });
             }
         });
     }
@@ -60,7 +66,9 @@ export default class UserContacts extends Component {
         let parsedResponse = await JSON.parse(response) || [];
         
         for(var contact of this.state.selectedContacts){
-            parsedResponse.push(contact);
+            if(parsedResponse.find((obj) => { return obj.givenName+obj.familyName === contact.givenName+contact.familyName; }) === undefined){
+                parsedResponse.push(contact)
+            }
         }
 
         AsyncStorage.setItem('emergContacts', JSON.stringify(parsedResponse));
@@ -79,12 +87,12 @@ export default class UserContacts extends Component {
                         <Text style={{
                             fontWeight: 'bold'
                             }}>
-                            {item.familyName} {item.givenName}
+                            {item.givenName} {item.familyName}
                             <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.phoneNumbers[0].number}</Text>
                         </Text>
                     ) : (
                         <Text>
-                            {item.familyName} {item.givenName}
+                            {item.givenName} {item.familyName}
                             <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.phoneNumbers[0].number}</Text>
                         </Text>
                     ))
@@ -98,7 +106,7 @@ export default class UserContacts extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.heading}>
-                    <Text style={{fontWeight: 'bold'}}>Select contacts to add</Text>
+                    <Text style={{fontWeight: 'bold'}}>Select contacts to add:</Text>
                 </View>
                  <FlatList data={this.state.allContacts} 
                         keyExtractor={item => item.recordID} 
