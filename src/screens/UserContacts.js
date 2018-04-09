@@ -75,12 +75,19 @@ export default class UserContacts extends Component {
                 item.phoneNumbers.length > 0 &&
                 item.phoneNumbers[0].number !== "undefined" ? 
                 (
-                    <Text style={{
-                        fontWeight: 'bold'
-                        }}>
-                        {item.familyName} {item.givenName}
-                        <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.phoneNumbers[0].number}</Text>
-                    </Text>
+                    (item.check ? (
+                        <Text style={{
+                            fontWeight: 'bold'
+                            }}>
+                            {item.familyName} {item.givenName}
+                            <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.phoneNumbers[0].number}</Text>
+                        </Text>
+                    ) : (
+                        <Text>
+                            {item.familyName} {item.givenName}
+                            <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.phoneNumbers[0].number}</Text>
+                        </Text>
+                    ))
                 ) : (
                     <Text>undefined</Text>
                 ));

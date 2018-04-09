@@ -55,7 +55,7 @@ export default class ContactsPage extends Component {
                     data={this.state.emergContacts}
                     renderItem={this.contactRender.bind(this)}
                     extraData={this.state} 
-                    keyExtractor={(item, index) => item.recordID}
+                    // keyExtractor={(item, index) => item.recordID}
                 />
                 <ActionButton buttonColor='#EAB543' onPress={() => {}}>
                     <ActionButton.Item buttonColor='#BDC581' title="From Contacts" onPress={() => { navigate('UserContacts') }}>
