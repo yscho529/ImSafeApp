@@ -33,6 +33,19 @@ export default class ContactsPage extends Component {
         });
     }
 
+    contactRender({item, index}) {
+        return (item !== "undefined" && 
+                item.givenName !== "undefined" && 
+                item.familyName !== "undefined" && 
+                item.phoneNumbers.length > 0 &&
+                item.phoneNumbers[0].number !== "undefined" ? 
+                (
+                    <Text style={styles.item}>{item.givenName} {item.familyName} {item.phoneNumbers[0].number}</Text>
+                ) : (
+                    <Text></Text>
+                ));
+    }
+
     render() {
         const { navigate } = this.props.navigation;
 
@@ -40,7 +53,7 @@ export default class ContactsPage extends Component {
             <View style={styles.container}>
                 <FlatList 
                     data={this.state.emergContacts}
-                    renderItem={ ({item}) => <Text style={styles.item}>{item.givenName} {item.familyName} {item.phoneNumbers[0].number}</Text> }
+                    renderItem={this.contactRender.bind(this)}
                     extraData={this.state} 
                     //keyExtractor={(item, index) => item.id}
                 />

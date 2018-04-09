@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Button, TouchableHighlight, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Contacts from 'react-native-contacts';
 import { StackNavigator } from 'react-navigation';
@@ -12,6 +12,7 @@ export default class UserContacts extends Component {
             allContacts: null,
             selectedContacts: []
         };
+        const { navigate } = this.props.navigation;
     }
 
     componentDidMount() {
@@ -52,6 +53,19 @@ export default class UserContacts extends Component {
           })
           this.setState({allContacts: this.state.allContacts})
           console.log(this.state.selectedContacts)
+    }
+
+    async addContacts() {
+        let response = await AsyncStorage.getItem('emergContacts');
+        let parsedResponse = await JSON.parse(response) || [];
+        
+        for(var contact of this.state.selectedContacts){
+            parsedResponse.push(contact);
+        }
+
+        AsyncStorage.setItem('emergContacts', JSON.stringify(parsedResponse));
+
+        this.props.navigation.navigate('ContactsPage');
     }
 
     render() {
@@ -117,7 +131,7 @@ export default class UserContacts extends Component {
                         />
                     </View>
                     <View style={styles.button}>
-                        <Button onPress={console.log("a")}
+                        <Button onPress={ this.addContacts.bind(this) }
                             title="Add"
                             color="#3B3B98"
                         />

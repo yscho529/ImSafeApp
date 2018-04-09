@@ -36,7 +36,6 @@ export default class UserContactInput extends Component {
         parsedResponse.push(this.state.newContact);
         AsyncStorage.setItem('emergContacts', JSON.stringify(parsedResponse));
 
-        console.log("S");
         console.log(parsedResponse);
 
         this.props.navigation.navigate('ContactsPage');
