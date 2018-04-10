@@ -1,26 +1,27 @@
 import React, { Component } from 'react';
 import {
-    View,
-    Text,
-    StyleSheet,
     AppRegistry,
+    StyleSheet,
+    Text,
+    View,
     TouchableHighlight,
-    ListView,
-    ScrollView,
     NativeAppEventEmitter,
     NativeEventEmitter,
     NativeModules,
     Platform,
+    PermissionsAndroid,
+    ListView,
+    ScrollView,
     AppState,
     Dimensions,
 } from 'react-native';
-
 import BleManager from 'react-native-ble-manager';
 
 const window = Dimensions.get('window');
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
 // create a component
 export default class Devices extends Component {
     
@@ -32,7 +33,7 @@ export default class Devices extends Component {
           peripherals: new Map(),
           appState: ''
         }
-
+    
         this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
         this.handleStopScan = this.handleStopScan.bind(this);
         this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
@@ -42,7 +43,9 @@ export default class Devices extends Component {
 
     componentDidMount() {
         AppState.addEventListener('change', this.handleAppStateChange);
+
         BleManager.start({showAlert: false});
+
         this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
         this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
         this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
@@ -54,7 +57,7 @@ export default class Devices extends Component {
         this.handlerStop.remove();
         this.handlerDisconnect.remove();
         this.handlerUpdate.remove();
-    }
+      }
 
     handleAppStateChange(nextAppState) {
         if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
@@ -64,35 +67,35 @@ export default class Devices extends Component {
           });
         }
         this.setState({appState: nextAppState});
-    }
+      }
 
     startScan() {
         if (!this.state.scanning) {
           this.setState({peripherals: new Map()});
           BleManager.scan([], 3, true).then((results) => {
             console.log('Scanning...');
-            this.setState({ scanning: true });
+            this.setState({scanning:true});
           });
         }
-    }
+      }
 
     handleStopScan() {
         console.log('Scan is stopped');
         this.setState({ scanning: false });
-    }
+      }
 
     retrieveConnected(){
         BleManager.getConnectedPeripherals([]).then((results) => {
-        console.log(results);
-        var peripherals = this.state.peripherals;
-        for (var i = 0; i < results.length; i++) {
+          console.log(results);
+          var peripherals = this.state.peripherals;
+          for (var i = 0; i < results.length; i++) {
             var peripheral = results[i];
             peripheral.connected = true;
             peripherals.set(peripheral.id, peripheral);
             this.setState({ peripherals });
-        }
+          }
         });
-    }
+      }
 
     handleDiscoverPeripheral(peripheral){
         var peripherals = this.state.peripherals;
@@ -101,7 +104,7 @@ export default class Devices extends Component {
           peripherals.set(peripheral.id, peripheral);
           this.setState({ peripherals })
         }
-    }
+      }
 
     handleDisconnectedPeripheral(data) {
         let peripherals = this.state.peripherals;
@@ -112,11 +115,11 @@ export default class Devices extends Component {
           this.setState({peripherals});
         }
         console.log('Disconnected from ' + data.peripheral);
-    }
+      }
 
     handleUpdateValueForCharacteristic(data) {
         console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
-    }
+      }
 
     test(peripheral) {
         if (peripheral){
@@ -186,40 +189,41 @@ export default class Devices extends Component {
         }
       }
 
-    render() {
+      render() {
         const list = Array.from(this.state.peripherals.values());
         const dataSource = ds.cloneWithRows(list);
+        
         return (
-            <View style={styles.container}>
-                <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
-                <Text>Scan Bluetooth ({this.state.scanning ? 'on' : 'off'})</Text>
-                </TouchableHighlight>
-                <TouchableHighlight style={{marginTop: 0,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.retrieveConnected() }>
-                <Text>Retrieve connected peripherals</Text>
-                </TouchableHighlight>
-                <ScrollView style={styles.scroll}>
-                    {(list.length == 0) &&
-                        <View style={{flex:1, margin: 20}}>
-                        <Text style={{textAlign: 'center'}}>No peripherals</Text>
-                        </View>
-                    }
-                    <ListView
-                        enableEmptySections={true}
-                        dataSource={dataSource}
-                        renderRow={(item) => {
-                        const color = item.connected ? 'green' : '#fff';
-                        return (
-                            <TouchableHighlight>
-                            <View style={[styles.row, {backgroundColor: color}]}>
-                                <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
-                                <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 10}}>{item.id}</Text>
-                            </View>
-                            </TouchableHighlight>
-                        );
-                        }}
-                    />
-                </ScrollView>
-            </View>
+          <View style={styles.container}>
+            <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
+              <Text>Scan Bluetooth ({this.state.scanning ? 'on' : 'off'})</Text>
+            </TouchableHighlight>
+            <TouchableHighlight style={{marginTop: 0,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.retrieveConnected() }>
+              <Text>Retrieve connected peripherals</Text>
+            </TouchableHighlight>
+            <ScrollView style={styles.scroll}>
+              {(list.length == 0) &&
+                <View style={{flex:1, margin: 20}}>
+                  <Text style={{textAlign: 'center'}}>No peripherals</Text>
+                </View>
+              }
+              <ListView
+                enableEmptySections={true}
+                dataSource={dataSource}
+                renderRow={(item) => {
+                  const color = item.connected ? 'green' : '#fff';
+                  return (
+                    <TouchableHighlight onPress={() => this.test(item) }>
+                      <View style={[styles.row, {backgroundColor: color}]}>
+                        <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
+                        <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 10}}>{item.id}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  );
+                }}
+              />
+            </ScrollView>
+          </View>
         );
     }
 }

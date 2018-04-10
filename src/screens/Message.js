@@ -65,6 +65,7 @@ export default class Message extends Component {
         }, (success) => {
             console.log("SMS sent successfully");
         });
+        console.log("PRESSED");
     }
 }
 
