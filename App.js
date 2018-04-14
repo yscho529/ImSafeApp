@@ -25,27 +25,30 @@ export default class App extends Component<Props> {
         error: null,
       };
 
-      console.log('in con')
-    }  
-
-    ComponentDidMount() {
-      console.log('in mount')
+      this.updateText = this.updateText.bind(this)
       this.updateText()
-      
     }
     
     async updateText() {
+      console.log('updateText')
       var defaultMessage = 'Hey, this is Paul. I am in an emergency situation right now and I need help!'
                             + ' My current location is https://www.google.com/maps/search/?api=1&query='
 
-      let response = await AsyncStorage.getItem('emerg_message')
-      if(response.length === 0){
-        this.setState({ text: defaultMessage })
-      }
-      else{
-        this.setState({ text: response })
-      }
+      await AsyncStorage.getItem('emerg_message').then((data) => {
+        if(data.length === 0){
+          console.log('in default')
+          this.setState({ text: defaultMessage })
+        }
+        else{
+          console.log('not default')
+          this.setState({ text: data })
+        }
+        this.getGPS()
+      })
+    }
 
+    getGPS() {
+      console.log('getGPS')
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this.setState({
@@ -54,11 +57,14 @@ export default class App extends Component<Props> {
             longitude: position.coords.longitude,
             error: null,
           });
+          this.setMessage()
         },
         (error) => this.setState({ error: error.message }),
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+        { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
       )
+    }
 
+    async setMessage() {
       await AsyncStorage.setItem('emerg_message', this.state.text);
     }
 
