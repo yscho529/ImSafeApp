@@ -58,7 +58,7 @@ export default class Message extends Component {
     async saveMessage() {
         console.log("PRESSED");
         AsyncStorage.setItem('message1', this.state.message1)
-        AsyncStorage.setItem('message', this.state.message1 + this.state.message2);
+        AsyncStorage.setItem('emerg_message', this.state.message1 + this.state.message2);
         this.setState({
             message: this.state.message1 + this.state.message2,
         });
