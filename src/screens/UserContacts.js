@@ -34,7 +34,7 @@ export default class UserContacts extends Component {
                         (a,b) => {
                             return a.givenName.localeCompare(b.givenName)
                         }
-                    ) 
+                    )
                 });
             }
         });
