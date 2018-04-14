@@ -60,8 +60,6 @@ export default class Devices extends Component {
             "characterDelimiter": "\n"
         }
 
-        // this.setState({ connectedDevices: new Map() })
-        // this.setState({ peripherals: new Map() })
         this.setState({ modalVisible: false })
 
         BT.init(config)
@@ -71,21 +69,6 @@ export default class Devices extends Component {
             .catch(function (ex) {
               console.warn(ex);
             });
-
-        // BT.startScan()
-        //     .then(function (devices) {
-        //         this.setState({ peripherals: devices })
-        //     })
-        //     .catch(function (ex) {
-        //         console.warn(ex);
-        //     });
-
-        // var dev = {
-        //     name: "test",
-        //     address: "33"
-        // }
-        // this.state.peripherals.push(dev)
-        // console.log(this.state.peripherals)
     }
 
     scan() {
