@@ -73,6 +73,11 @@ export default class Message extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={styles.header}>
+                    <View style={styles.headerText}>
+                        <Text>Emergency Message: </Text>
+                    </View>
+                </View>
                 <CustomMessage
                     multiline = {true}
                     numberOfLines = {1}
@@ -95,4 +100,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    header: {
+        flexDirection: 'row',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderStyle: 'solid',
+        borderColor: 'rgba(88, 177, 159, 0.2)'
+    },
+    headerText: {
+        flex: 3,
+        alignItems: 'flex-start',
+        justifyContent: 'center'
+    }
 });

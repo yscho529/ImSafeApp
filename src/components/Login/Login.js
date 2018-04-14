@@ -14,7 +14,7 @@ export default class Login extends Component {
                         style={styles.logo}
                         source={require('../../images/Octocat.png')} 
                     />
-                    <Text style={styles.title}>A bullshit motto</Text>
+                    <Text style={styles.title}>A</Text>
                 </View>
 
                 <View style={styles.formContainer}>
