@@ -62,12 +62,6 @@ export default class Message extends Component {
         this.setState({
             message: this.state.message1 + this.state.message2,
         });
-
-        SmsAndroid.autoSend('6786779310', this.state.message1 + this.state.message2, (fail) => {
-            console.log("Failed with this error: " + fail)
-        }, (success) => {
-            console.log("SMS sent successfully");
-        });
     }
 
     render() {
