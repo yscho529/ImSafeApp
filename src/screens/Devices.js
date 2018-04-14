@@ -17,7 +17,12 @@ import {
     TouchableOpacity,
     FlatList,
     Button,
+    AsyncStorage,
 } from 'react-native';
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 import Modal from "react-native-modal";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button'
@@ -121,6 +126,7 @@ export default class Devices extends Component {
     onDataRead(data) {
         console.log("onDataRead");
         console.log(data);
+<<<<<<< HEAD
         
         SmsAndroid.autoSend('6786779310', this.getMessage(), (fail) => {
             console.log("Failed with this error: " + fail)
@@ -132,6 +138,21 @@ export default class Devices extends Component {
     async getMessage() {
         let response = await AsyncStorage.getItem('emerg_message')
         return response
+=======
+        this.sendMessage()
+      }
+
+    async sendMessage() {
+        console.log('getMessage')
+        await AsyncStorage.getItem('emerg_message').then((data) => {
+            console.log(data)
+            SmsAndroid.autoSend('6786779310', data, (fail) => {
+                console.log("Failed with this error: " + fail)
+            }, (success) => {
+                console.log("SMS sent successfully");
+            });
+        })
+>>>>>>> master
     }
 
     onDeviceFound(device) {
