@@ -67,6 +67,7 @@ export default class App extends Component {
     }
 
     async setMessage(coords) {
+      console.log('setMessage')
       await AsyncStorage.setItem('emerg_message', this.state.text + coords.latitude + ',' + coords.longitude);
     }
 
