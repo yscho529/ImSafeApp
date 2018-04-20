@@ -23,33 +23,33 @@ import Modal from "react-native-modal";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button'
 import BT from 'easy-bluetooth-classic';
-import SmsAndroid  from 'react-native-get-sms-android';
+import SmsAndroid from 'react-native-get-sms-android';
 
 export default class Devices extends Component {
-    
-    constructor(){
+
+    constructor() {
         super()
         this.state = {
-          emerg_message: '',
-          cancel_message: '',
-          scanning:false,
-          peripherals: [],
-          connectedDevices: [],
-          appState: '',
-          removeState: false,
-          modalVisible: false,
-          gpsFound: false,
+            emerg_message: '',
+            location_message: '',
+            cancel_message: '',
+            scanning: false,
+            peripherals: [],
+            connectedDevices: [],
+            appState: '',
+            removeState: false,
+            modalVisible: false,
+            gpsFound: false,
         }
     }
 
     componentDidMount() {
-        this.getsendEmergencyMessage()
     }
 
     componentWillMount() {
         this.onDataReadEvent = BT.addOnDataReadListener(this.onDataRead.bind(this));
         this.onDeviceFoundEvent = BT.addOnDeviceFoundListener(this.onDeviceFound.bind(this));
-        this.cancelBtn = this.cancelBtn.bind(this)        
+        this.cancelBtn = this.cancelBtn.bind(this)
         this.openModal = this.openModal.bind(this)
         this.scan = this.scan.bind(this)
         this.connectDevice = this.connectDevice.bind(this)
@@ -67,10 +67,10 @@ export default class Devices extends Component {
 
         BT.init(config)
             .then(function (config) {
-              console.log("config done!");
+                console.log("config done!");
             })
             .catch(function (ex) {
-              console.warn(ex);
+                console.warn(ex);
             });
     }
 
@@ -101,7 +101,7 @@ export default class Devices extends Component {
             .catch((ex) => {
                 console.warn(ex);
             })
-        
+
         this.setState({ modalVisible: false })
     }
 
@@ -114,12 +114,11 @@ export default class Devices extends Component {
         } else if (data.toString().length == 7) {
             this.getsendCancelMessage();
         }
-      }
+    }
 
     async getsendEmergencyMessage() {
         console.log('get emergency message');
         let response = await AsyncStorage.getItem('emerg_message');
-        console.log(response)
         this.setState({ emerg_message: response });
         this.getGPS();
     }
@@ -134,10 +133,11 @@ export default class Devices extends Component {
                     error: null,
                 });
                 console.log('updatingEmergencyMessage');
-                this.setState({ emerg_message: this.state.emerg_message +
-                    ' My current location is https://www.google.com/maps/search/?api=1&query=' +
-                    position.coords.latitude + ',' + position.coords.longitude});
-                this.setState({ gpsFound: true })
+                this.setState({
+                    location_message: 'My current location is https://www.google.com/maps/search/?api=1&query=' +
+                        position.coords.latitude + ',' + position.coords.longitude
+                });
+                this.sendSMS(true);
             },
             (error) => this.setState({ error: error.message }),
             { enableHighAccuracy: false, timeout: 2000, maximumAge: 1000 },
@@ -145,20 +145,28 @@ export default class Devices extends Component {
     }
 
     async getsendCancelMessage() {
+        console.log('get cancel message');
         let response = await AsyncStorage.getItem('cancel_message');
+        console.log(response)
         this.setState({ cancel_message: response });
         this.sendSMS(false)
     }
 
     sendSMS(emerg_or_cancel) {
         if (emerg_or_cancel) {
-            console.log('attempting to send emergency message')
+            console.log('attempting to send emergency message:');
             SmsAndroid.autoSend('6786779310', this.state.emerg_message, (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
                 console.log("SMS sent successfully");
             });
+            SmsAndroid.autoSend('6786779310', this.state.location_message, (fail) => {
+                console.log("Failed with this error: " + fail)
+            }, (success) => {
+                console.log("SMS sent successfully");
+            });
         } else {
+            console.log('attempting to send cancel message: ' + this.state.cancel_message)
             SmsAndroid.autoSend('6786779310', this.state.cancel_message, (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
@@ -177,7 +185,6 @@ export default class Devices extends Component {
     }
 
     removeDevices() {
-        
     }
 
     openModal(visible) {
@@ -188,7 +195,7 @@ export default class Devices extends Component {
     cancelBtn() {
         console.log('cancel')
         this.setState({ selectedDevices: [] })
-        for(var device of this.state.connectedDevices){
+        for (var device of this.state.connectedDevices) {
             device.check = false;
         }
         this.setState({ removeState: false })
@@ -196,134 +203,130 @@ export default class Devices extends Component {
 
     renderScanList() {
         return <FlatList data={(this.state.peripherals.length > 0 ? this.state.peripherals : null)}
-                keyExtractor={item => item.address} 
-                extraData={this.state} 
-                ListHeaderComponent={this.renderHeader} 
-                renderItem= {({item}) => {
-                    return <TouchableOpacity style={{
-                                    flexDirection: 'row',
-                                    // padding: 10,
-                                    borderBottomWidth: 1,
-                                    borderStyle: 'solid',
-                                    borderColor: 'rgba(88, 177, 159, 0.2)'
-                                }} 
-                                onPress={() => { this.connectDevice(item) }}>
-                                    {/* <View style={{
-                                        flex: 3,
-                                        alignItems: 'flex-start',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <Text>
-                                            {item.name}
-                                            <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.address}</Text>
-                                        </Text>
-                                    </View> */}
-                                    <Text>
-                                        {item.name}
-                                        <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.address}</Text>
-                                    </Text>
-                            </TouchableOpacity>
-            }}/>
+            keyExtractor={item => item.address}
+            extraData={this.state}
+            ListHeaderComponent={this.renderHeader}
+            renderItem={({ item }) => {
+                return <TouchableOpacity style={{
+                    flexDirection: 'row',
+                    // padding: 10,
+                    borderBottomWidth: 1,
+                    borderStyle: 'solid',
+                    borderColor: 'rgba(88, 177, 159, 0.2)'
+                }}
+                    onPress={() => { this.connectDevice(item) }}>
+                    {/* <View style={{
+                            flex: 3,
+                            alignItems: 'flex-start',
+                            justifyContent: 'center'
+                        }}>
+                            <Text>
+                                {item.name}
+                                <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.address}</Text>
+                            </Text>
+                        </View> */}
+                    <Text>
+                        {item.name}
+                        <Text style={{ color: 'rgba(0,0,0,0.3)' }}>  {item.address}</Text>
+                    </Text>
+                </TouchableOpacity>
+            }} />
     }
 
     listRender(item) {
-        return (item !== "undefined" ? 
-                (
-                    this.state.removeState ? (<TouchableOpacity style={{
+        return (item !== "undefined" ?
+            (
+                this.state.removeState ? (<TouchableOpacity style={{
+                    flexDirection: 'row',
+                    padding: 10,
+                    borderBottomWidth: 1,
+                    borderStyle: 'solid',
+                    borderColor: 'rgba(88, 177, 159, 0.2)'
+                }}
+
+                    onPress={() => {
+                        this.press(item)
+                    }}>
+                    <View style={{
+                        flex: 3,
+                        alignItems: 'flex-start',
+                        justifyContent: 'center'
+                    }}>
+                        {item.check ? (
+                            <Text style={{
+                                fontWeight: 'bold'
+                            }}>
+                                {item.name}
+                                <Text style={{ color: 'rgba(0,0,0,0.3)' }}>  {item.address}</Text>
+                            </Text>
+                        ) : (
+                                <Text>
+                                    {item.name}
+                                    <Text style={{ color: 'rgba(0,0,0,0.3)' }}>  {item.address}</Text>
+                                </Text>
+                            )}
+                    </View>
+                    <View style={{
+                        flex: 1,
+                        alignItems: 'flex-end',
+                        justifyContent: 'center'
+                    }}>
+                        {item.check
+                            ? (
+                                <Icon name="minus-circle" size={30} color={'#FD7272'}></Icon>
+                            )
+                            : (
+                                <Icon name="circle-thin" size={30} color={'#cad3c8'}></Icon>
+                            )}
+                    </View>
+                </TouchableOpacity>
+                ) : (
+                        <View style={{
                             flexDirection: 'row',
                             padding: 10,
                             borderBottomWidth: 1,
                             borderStyle: 'solid',
-                            borderColor: 'rgba(88, 177, 159, 0.2)'
-                        }}
-
-                        onPress={() => {
-                            this.press(item)
+                            borderColor: 'rgba(88, 177, 159, 0.2)',
                         }}>
                             <View style={{
                                 flex: 3,
                                 alignItems: 'flex-start',
                                 justifyContent: 'center'
                             }}>
-                                {item.check ? (
-                                    <Text style={{
-                                        fontWeight: 'bold'
-                                        }}>
-                                        {item.name}
-                                        <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.address}</Text>
-                                    </Text>
-                                ) : (
-                                    <Text>
-                                        {item.name}
-                                        <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.address}</Text>
-                                    </Text>
-                                )}
+                                <Text>
+                                    {item.name}
+                                    <Text style={{ color: 'rgba(0,0,0,0.3)' }}>  {item.address}</Text>
+                                </Text>
                             </View>
                             <View style={{
                                 flex: 1,
                                 alignItems: 'flex-end',
                                 justifyContent: 'center'
                             }}>
-                                {item.check
-                                ? (
-                                    <Icon name="minus-circle" size={30} color={'#FD7272'}></Icon>
-                                )
-                                : (
-                                    <Icon name="circle-thin" size={30} color={'#cad3c8'}></Icon>
-                                )}
+                                <Icon name="circle-thin" size={30} color={'rgba(0,0,0,0)'}></Icon>
                             </View>
-                        </TouchableOpacity>
-                        ) : (
-                            <View style={{
-                                flexDirection: 'row',
-                                padding: 10,
-                                borderBottomWidth: 1,
-                                borderStyle: 'solid',
-                                borderColor: 'rgba(88, 177, 159, 0.2)',
-                            }}>
-                                <View style={{
-                                    flex: 3,
-                                    alignItems: 'flex-start',
-                                    justifyContent: 'center'
-                                }}>
-                                    <Text>
-                                        {item.name}
-                                        <Text style={{color: 'rgba(0,0,0,0.3)'}}>  {item.address}</Text>
-                                    </Text>
-                                </View>
-                                <View style={{
-                                    flex: 1,
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'center'
-                                }}>
-                                    <Icon name="circle-thin" size={30} color={'rgba(0,0,0,0)'}></Icon>
-                                </View>
-                            </View>
-                        )
-                    ) : (
-                        <Text>No</Text>
-                    ));
+                        </View>
+                    )
+            ) : (
+                <Text>No</Text>
+            ));
     }
 
     render() {
-        if(this.state.gpsFound){
-            this.setState({ gpsFound: false })
-            this.sendSMS(true)
-        }
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={{
-                        flexDirection: 'row',
-                        padding: 10,
-                        borderBottomWidth: 1,
-                        borderStyle: 'solid',
-                        borderColor: 'rgba(88, 177, 159, 0.2)'
-                    }}
+                    flexDirection: 'row',
+                    padding: 10,
+                    borderBottomWidth: 1,
+                    borderStyle: 'solid',
+                    borderColor: 'rgba(88, 177, 159, 0.2)'
+                }}
                     onPress={() => {
-                        if(this.state.removeState){
+                        if (this.state.removeState) {
                             this.cancelBtn()
                         } else {
-                            this.setState({ removeState : true })
+                            this.setState({ removeState: true })
                         }
                     }}>
                     <View style={{
@@ -334,8 +337,8 @@ export default class Devices extends Component {
                         {this.state.removeState ? (
                             <Text>Select Devices to Remove:</Text>
                         ) : (
-                            <Text>List of Connected Devices:</Text>
-                        )}
+                                <Text>List of Connected Devices:</Text>
+                            )}
                     </View>
                     <View style={{
                         flex: 1,
@@ -345,48 +348,60 @@ export default class Devices extends Component {
                         <Icon name="bars" size={30} color={'#FD7272'}></Icon>
                     </View>
                 </TouchableOpacity>
+                <View>
+                    <Button onPress={this.getsendEmergencyMessage.bind(this)}
+                        title="Push"
+                        color="#25CCF7"
+                        borderBottomWidth="1"
+                    />
+                    <Button onPress={this.getsendCancelMessage.bind(this)}
+                        title="Cancel"
+                        color="#25CCF7"
+                        borderBottomWidth="1"
+                    />
+                </View>
                 <FlatList data={(this.state.connectedDevices.length > 0 ? this.state.connectedDevices : null)}
-                        keyExtractor={item => item.address} 
-                        extraData={this.state} 
-                        ListHeaderComponent={this.renderHeader} 
-                        renderItem= {({item}) => (this.listRender(item))}/>
+                    keyExtractor={item => item.address}
+                    extraData={this.state}
+                    ListHeaderComponent={this.renderHeader}
+                    renderItem={({ item }) => (this.listRender(item))} />
                 {this.state.removeState ? (
                     <View style={styles.buttons}>
                         <View style={styles.button}>
-                            <Button onPress={ () => { this.setState({ removeState: false }) } }
+                            <Button onPress={() => { this.setState({ removeState: false }) }}
                                 title="Cancel"
                                 color="#1B9CFC"
                             />
                         </View>
                         <View style={styles.button}>
-                            <Button onPress={ () => { console.log('a') } }
+                            <Button onPress={() => { console.log('a') }}
                                 title="Remove"
                                 color="#FD7272"
                             />
                         </View>
-                    </View>                    
+                    </View>
                 ) : (
-                    <ActionButton buttonColor='#3B3B98' onPress={ () => { this.openModal(true) } }>
-                    </ActionButton>
-                )}
-                <Modal isVisible={ this.state.modalVisible }
-                        backdropColor={"black"}
-                        backdropOpacity={0.5}
-                        animationIn="slideInUp"
-                        animationOut="slideOutDown"
-                        animationInTiming={1000}
-                        animationOutTiming={1000}
-                        backdropTransitionInTiming={1000}
-                        backdropTransitionOutTiming={1000}>
+                        <ActionButton buttonColor='#3B3B98' onPress={() => { this.openModal(true) }}>
+                        </ActionButton>
+                    )}
+                <Modal isVisible={this.state.modalVisible}
+                    backdropColor={"black"}
+                    backdropOpacity={0.5}
+                    animationIn="slideInUp"
+                    animationOut="slideOutDown"
+                    animationInTiming={1000}
+                    animationOutTiming={1000}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}>
                     <View style={styles.modalContent}>
                         <View>
-                            <Text style={{ 
+                            <Text style={{
                                 fontWeight: 'bold'
                             }}>Connect A Device</Text>
                         </View>
                         <Text>Select a device to connect</Text>
                         <View style={styles.scanList}>
-                            { this.renderScanList() }
+                            {this.renderScanList()}
                             {/* <Text>{ this.state.scanning ? 'Scanning...' : 'Not Scanning' }</Text> */}
                         </View>
                         <View style={styles.modalButtons}>
@@ -458,7 +473,7 @@ const styles = StyleSheet.create({
     scanList: {
         backgroundColor: "white",
         justifyContent: "center",
-        marginTop:10,
+        marginTop: 10,
         padding: 50,
         alignItems: "center",
         borderWidth: 1,
