@@ -29,12 +29,12 @@ export default class Message extends Component {
     }
 
     componentDidMount() {
-        this.updateMessage();
+        this.updateEmergencyMessage();
         this.updateCancelMessage();
     }
 
-    async updateMessage() {
-        console.log('updateMessage');
+    async updateEmergencyMessage() {
+        console.log('updateEmergencyMessage');
         var defaultEmergMessage = 'Hey, this is Paul. I am in an emergency situation right now and I need help!';
         
         let response = await AsyncStorage.getItem('emerg_message');
