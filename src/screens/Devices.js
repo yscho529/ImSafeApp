@@ -110,7 +110,7 @@ export default class Devices extends Component {
         console.log('data string lenght: ' + data.toString().length)
         if (data.toString().length == 5) {
             this.getEmergencyMessage();
-            SmsAndroid.autoSend('6786779310', this.state.cancel_message, (fail) => {
+            SmsAndroid.autoSend('6786779310', this.state.emerg_message, (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
                 console.log("SMS sent successfully");
@@ -125,11 +125,11 @@ export default class Devices extends Component {
         }
       }
 
-
     async getEmergencyMessage() {
         console.log('get emergency message');
         let response = await AsyncStorage.getItem('emerg_message');
-        this.setState({ cancel_message: response });
+        this.setState({ emerg_message: response });
+        this.getGPS();
     }
 
     async getGPS() {
@@ -141,19 +141,18 @@ export default class Devices extends Component {
                     longitude: position.coords.longitude,
                     error: null,
                 });
-                this.setMessage(position.coords);
-                console.log('set');
+                this.updateMessage(position.coords);
             },
             (error) => this.setState({ error: error.message }),
             { enableHighAccuracy: false, timeout: 2000, maximumAge: 1000 },
         );
     }
   
-    async updateMessage2(coords) {
-        console.log('updateMessage2');
-        await AsyncStorage.setItem('message2',
+    async updateMessage(coords) {
+        console.log('updateMessage');
+        this.setState({ emerg_message: this.state.emerg_message +
             ' My current location is https://www.google.com/maps/search/?api=1&query=' +
-            coords.latitude + ',' + coords.longitude);
+            coords.latitude + ',' + coords.longitude});
     }
 
     async getCancelMessage() {
