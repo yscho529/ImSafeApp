@@ -25,57 +25,15 @@ export default class App extends Component {
         error: null,
       };
 
-      console.log('in con')
-      AsyncStorage.clear()
-      this.updateText = this.updateText.bind(this)
-      this.updateText()
-    }
-    
-    async updateText() {
-      console.log('updateText')
-      var defaultMessage = 'Hey, this is Paul. I am in an emergency situation right now and I need help!'
-                            + ' My current location is https://www.google.com/maps/search/?api=1&query='
-
-      await AsyncStorage.getItem('emerg_message').then((data) => {
-        if(data == null){
-          console.log('in default')
-          this.setState({ text: defaultMessage })
-        }
-        else{
-          console.log('not default')
-          this.setState({ text: data })
-        }
-        this.getGPS()
-      })
+      console.log('in con');
+      AsyncStorage.clear();
     }
 
-    getGPS() {
-      console.log('getGPS')
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            error: null,
-          });
-          this.setMessage(position.coords)
-          console.log('set')
-        },
-        (error) => this.setState({ error: error.message }),
-        { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
-      )
+    render() {
+      return (
+        <Tabs />
+      );
     }
-
-    async setMessage(coords) {
-      console.log('setMessage')
-      await AsyncStorage.setItem('emerg_message', this.state.text + coords.latitude + ',' + coords.longitude);
-    }
-
-  render() {
-    return (
-      <Tabs />
-    );
-  }
 }
 
 const styles = StyleSheet.create({

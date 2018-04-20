@@ -21,8 +21,6 @@ export default class Message extends Component {
         this.state = {
           editState: false,
           emerg_message: '',
-          message1: '',
-          message2: '',
           cancel_message: '',
           latitude: null,
           longitude: null,
@@ -31,15 +29,22 @@ export default class Message extends Component {
     }
 
     componentDidMount() {
-        this.updateMessage1();
-        this.updateMessage2();
-        this.check();
+        this.updateMessage();
         this.updateCancelMessage();
     }
 
-    async check() {
+    async updateMessage() {
+        console.log('updateMessage');
+        var defaultMessage1 = 'Hey, this is Paul. I am in an emergency situation right now and I need help!';
+        
         let response = await AsyncStorage.getItem('emerg_message');
-        console.log('emerg_message: '+ response);
+        if (response == null) {
+            this.setState({ emerg_message: this.state.message1 + this.state.message2 });
+            console.log('emerg_message: ' + this.state.emerg_message);
+            await AsyncStorage.setItem('emerg_message', this.state.emerg_message);
+        } else {
+            this.setState({ emerg_message: response});
+        }
     }
 
     async updateCancelMessage() {
@@ -48,45 +53,18 @@ export default class Message extends Component {
 
         let response = await AsyncStorage.getItem('cancel_message');
         if (response == null) {
-            await AsyncStorage.setItem('cancel_message', defaultCancelMessage);
             this.setState({ cancel_message: defaultCancelMessage});
+            console.log('cancel_message: ' + this.state.cancel_message);
+            await AsyncStorage.setItem('cancel_message', defaultCancelMessage);
+        } else {
+            this.setState({ cancel_message: response});
         }
-        console.log('cancel_message: ' + this.state.cancel_message);
     }
-
-    async updateMessage1() {
-        console.log('updateMessage1');
-        var defaultMessage1 = 'Hey, this is Paul. I am in an emergency situation right now and I need help!';
-
-        let response = await AsyncStorage.getItem('message1');
-        if (response == null) {
-            await AsyncStorage.setItem('message1', defaultMessage1);
-            this.setState({ message1: defaultMessage1});
-        }
-        console.log('message1: ' + this.state.message1);
-    }
-
-    async updateMessage2() {
-        console.log('updateMessage2');
-        let response = await AsyncStorage.getItem('message2');
-        this.setState({ message2: response});
-        console.log('message2: ' + this.state.message2);
-    }
-
-    async updateMessage() {
-        console.log('updateMessage');
-        this.setState({ emerg_message: this.state.message1 + this.state.message2 });
-        await AsyncStorage.setItem('emerg_message', this.state.emerg_message);
-    } 
 
     async saveMessage() {
         console.log("saving messages");
-        AsyncStorage.setItem('message1', this.state.message1);
-        AsyncStorage.setItem('emerg_message', this.state.message1 + this.state.message2);
-        this.setState({
-            emerg_message: this.state.message1 + this.state.message2,
-        });
-        AsyncStorage.setItem('cancel_message', this.state.cancel_message);
+        await AsyncStorage.setItem('emerg_message', this.state.emerg_message);
+        await AsyncStorage.setItem('cancel_message', this.state.cancel_message);
     }
 
     render() {
@@ -135,12 +113,12 @@ export default class Message extends Component {
                                 <CustomMessage
                                     multiline = {true}
                                     numberOfLines = {1}
-                                    onChangeText={(message1) => this.setState({message1})}
-                                    value={this.state.message1}
+                                    onChangeText={(emerg_message) => this.setState({emerg_message})}
+                                    value={this.state.emerg_message}
                                 />
                             </View>
                         ) : (
-                            <Text>{this.state.message1}</Text> 
+                            <Text>{this.state.emerg_message}</Text> 
                         )}
                     </View>
                 </View>

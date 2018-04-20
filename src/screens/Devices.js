@@ -30,6 +30,8 @@ export default class Devices extends Component {
     constructor(){
         super()
         this.state = {
+          emerg_message: '',
+          cancel_message: '',
           scanning:false,
           peripherals: [],
           connectedDevices: [],
@@ -104,18 +106,59 @@ export default class Devices extends Component {
 
     onDataRead(data) {
         console.log("onDataRead");
-        console.log(data);
-        
-        SmsAndroid.autoSend('6786779310', this.getMessage(), (fail) => {
-            console.log("Failed with this error: " + fail)
-        }, (success) => {
-            console.log("SMS sent successfully");
-        });
+        console.log('data: ' + data)
+        console.log('data string lenght: ' + data.toString().length)
+        if (data.toString().length == 5) {
+            this.getEmergencyMessage();
+            SmsAndroid.autoSend('6786779310', this.state.cancel_message, (fail) => {
+                console.log("Failed with this error: " + fail)
+            }, (success) => {
+                console.log("SMS sent successfully");
+            });
+        } else if (data.toString().length == 7) {
+            this.getCancelMessage();
+            SmsAndroid.autoSend('6786779310', this.state.cancel_message, (fail) => {
+                console.log("Failed with this error: " + fail)
+            }, (success) => {
+                console.log("SMS sent successfully");
+            });
+        }
       }
 
-    async getMessage() {
-        let response = await AsyncStorage.getItem('emerg_message')
-        return response
+
+    async getEmergencyMessage() {
+        console.log('get emergency message');
+        let response = await AsyncStorage.getItem('emerg_message');
+        this.setState({ cancel_message: response });
+    }
+
+    async getGPS() {
+        console.log('getGPS');
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                this.setState({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    error: null,
+                });
+                this.setMessage(position.coords);
+                console.log('set');
+            },
+            (error) => this.setState({ error: error.message }),
+            { enableHighAccuracy: false, timeout: 2000, maximumAge: 1000 },
+        );
+    }
+  
+    async updateMessage2(coords) {
+        console.log('updateMessage2');
+        await AsyncStorage.setItem('message2',
+            ' My current location is https://www.google.com/maps/search/?api=1&query=' +
+            coords.latitude + ',' + coords.longitude);
+    }
+
+    async getCancelMessage() {
+        let response = await AsyncStorage.getItem('cancel_message');
+        this.setState({ cancel_message: response });
     }
 
     onDeviceFound(device) {
