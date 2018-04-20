@@ -35,11 +35,11 @@ export default class Message extends Component {
 
     async updateMessage() {
         console.log('updateMessage');
-        var defaultMessage1 = 'Hey, this is Paul. I am in an emergency situation right now and I need help!';
+        var defaultEmergMessage = 'Hey, this is Paul. I am in an emergency situation right now and I need help!';
         
         let response = await AsyncStorage.getItem('emerg_message');
         if (response == null) {
-            this.setState({ emerg_message: this.state.message1 + this.state.message2 });
+            this.setState({ emerg_message: defaultEmergMessage });
             console.log('emerg_message: ' + this.state.emerg_message);
             await AsyncStorage.setItem('emerg_message', this.state.emerg_message);
         } else {
@@ -55,7 +55,7 @@ export default class Message extends Component {
         if (response == null) {
             this.setState({ cancel_message: defaultCancelMessage});
             console.log('cancel_message: ' + this.state.cancel_message);
-            await AsyncStorage.setItem('cancel_message', defaultCancelMessage);
+            await AsyncStorage.setItem('cancel_message', this.state.cancel_message);
         } else {
             this.setState({ cancel_message: response});
         }
