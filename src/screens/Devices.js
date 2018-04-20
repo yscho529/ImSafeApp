@@ -123,9 +123,9 @@ export default class Devices extends Component {
         this.getGPS();
     }
 
-    async getGPS() {
+    getGPS() {
         console.log('getGPS');
-        await navigator.geolocation.getCurrentPosition(
+        navigator.geolocation.getCurrentPosition(
             (position) => {
                 this.setState({
                     latitude: position.coords.latitude,
@@ -154,12 +154,13 @@ export default class Devices extends Component {
 
     sendSMS(emerg_or_cancel) {
         if (emerg_or_cancel) {
-            console.log('attempting to send emergency message:');
+            console.log('attempting to send emergency message: ' + this.state.emerg_message);
             SmsAndroid.autoSend('6786779310', this.state.emerg_message, (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
                 console.log("SMS sent successfully");
             });
+            console.log('attempting to send emergency message: ' + this.state.location_message);
             SmsAndroid.autoSend('6786779310', this.state.location_message, (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
