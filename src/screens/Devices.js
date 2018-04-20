@@ -38,11 +38,12 @@ export default class Devices extends Component {
           appState: '',
           removeState: false,
           modalVisible: false,
+          gpsFound: false,
         }
     }
 
     componentDidMount() {
-        
+        this.getsendEmergencyMessage()
     }
 
     componentWillMount() {
@@ -118,6 +119,7 @@ export default class Devices extends Component {
     async getsendEmergencyMessage() {
         console.log('get emergency message');
         let response = await AsyncStorage.getItem('emerg_message');
+        console.log(response)
         this.setState({ emerg_message: response });
         this.getGPS();
     }
@@ -135,9 +137,7 @@ export default class Devices extends Component {
                 this.setState({ emerg_message: this.state.emerg_message +
                     ' My current location is https://www.google.com/maps/search/?api=1&query=' +
                     position.coords.latitude + ',' + position.coords.longitude});
-                console.log('emerg_message: ' + this.state.emerg_message);
-                console.log('sendingEmergencyMessage');
-                this.sendSMS(true);
+                this.setState({ gpsFound: true })
             },
             (error) => this.setState({ error: error.message }),
             { enableHighAccuracy: false, timeout: 2000, maximumAge: 1000 },
@@ -180,10 +180,6 @@ export default class Devices extends Component {
         
     }
 
-    btDevicesModal() {
-
-    }
-
     openModal(visible) {
         this.setState({ modalVisible: visible })
         // this.scan()
@@ -199,8 +195,6 @@ export default class Devices extends Component {
     }
 
     renderScanList() {
-        console.log('renderScanList')
-        console.log(this.state.peripherals.length > 0)
         return <FlatList data={(this.state.peripherals.length > 0 ? this.state.peripherals : null)}
                 keyExtractor={item => item.address} 
                 extraData={this.state} 
@@ -312,6 +306,10 @@ export default class Devices extends Component {
     }
 
     render() {
+        if(this.state.gpsFound){
+            this.setState({ gpsFound: false })
+            this.sendSMS(true)
+        }
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={{
