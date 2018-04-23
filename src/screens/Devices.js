@@ -147,32 +147,29 @@ export default class Devices extends Component {
     async getsendCancelMessage() {
         console.log('get cancel message');
         let response = await AsyncStorage.getItem('cancel_message');
-        console.log(response)
+        // console.log(response)
         this.setState({ cancel_message: response });
         this.sendSMS(false)
     }
 
-    sendSMS(emerg_or_cancel) {
-        if (emerg_or_cancel) {
-            console.log('attempting to send emergency message: ' + this.state.emerg_message);
-            SmsAndroid.autoSend('6786779310', this.state.emerg_message, (fail) => {
+    async sendSMS(emerg_or_cancel) {
+        let response = await AsyncStorage.getItem('emergContacts')
+        let parsedResponse = await JSON.parse(response) || [];
+        for(i=0; i<parsedResponse.length; i++){
+            var contact = parsedResponse[i]
+            var num = contact.phoneNumbers[0] === "undefined" ? '' : contact.phoneNumbers[0].number
+            SmsAndroid.autoSend(num, (emerg_or_cancel ? this.state.emerg_message : this.state.cancel_message), (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
                 console.log("SMS sent successfully");
             });
-            console.log('attempting to send emergency message: ' + this.state.location_message);
-            SmsAndroid.autoSend('6786779310', this.state.location_message, (fail) => {
-                console.log("Failed with this error: " + fail)
-            }, (success) => {
-                console.log("SMS sent successfully");
-            });
-        } else {
-            console.log('attempting to send cancel message: ' + this.state.cancel_message)
-            SmsAndroid.autoSend('6786779310', this.state.cancel_message, (fail) => {
-                console.log("Failed with this error: " + fail)
-            }, (success) => {
-                console.log("SMS sent successfully");
-            });
+            if(emerg_or_cancel){
+                SmsAndroid.autoSend(num, this.state.location_message, (fail) => {
+                    console.log("Failed with this error: " + fail)
+                }, (success) => {
+                    console.log("SMS sent successfully");
+                });
+            }
         }
     }
 

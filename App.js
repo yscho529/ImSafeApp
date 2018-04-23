@@ -26,7 +26,6 @@ export default class App extends Component {
     };
 
     console.log('in con');
-    AsyncStorage.clear();
     this.setEmergencyMessage();
     this.setCancelMessage();
   }
