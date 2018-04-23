@@ -16,60 +16,31 @@ import Login from './src/components/Login/Login';
 import { Tabs } from './src/config/router';
 
 export default class App extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        text: '',
-        latitude: null,
-        longitude: null,
-        error: null,
-      };
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+      latitude: null,
+      longitude: null,
+      error: null,
+    };
 
-      console.log('in con')
-      AsyncStorage.clear()
-      this.updateText = this.updateText.bind(this)
-      this.updateText()
-    }
-    
-    async updateText() {
-      console.log('updateText')
-      var defaultMessage = 'Hey, this is Paul. I am in an emergency situation right now and I need help!'
-                            + ' My current location is https://www.google.com/maps/search/?api=1&query='
+    console.log('in con');
+    this.setEmergencyMessage();
+    this.setCancelMessage();
+  }
 
-      await AsyncStorage.getItem('emerg_message').then((data) => {
-        if(data == null){
-          console.log('in default')
-          this.setState({ text: defaultMessage })
-        }
-        else{
-          console.log('not default')
-          this.setState({ text: data })
-        }
-        this.getGPS()
-      })
-    }
+  async setEmergencyMessage() {
+    console.log('setEmergencyMessage');
+    var defaultEmergMessage = 'Hey, this is Paul. I am in an emergency situation right now and I need help!';
+    await AsyncStorage.setItem('emerg_message', defaultEmergMessage);
+  }
 
-    getGPS() {
-      console.log('getGPS')
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.setState({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            error: null,
-          });
-          this.setMessage(position.coords)
-          console.log('set')
-        },
-        (error) => this.setState({ error: error.message }),
-        { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 },
-      )
-    }
-
-    async setMessage(coords) {
-      console.log('setMessage')
-      await AsyncStorage.setItem('emerg_message', this.state.text + coords.latitude + ',' + coords.longitude);
-    }
+  async setCancelMessage() {
+    console.log('setCancelMessage');
+    var defaultCancelMessage = 'Hey, this is Paul. That was just a false alarm! Sorry about that.';
+    await AsyncStorage.setItem('cancel_message', defaultCancelMessage);
+  }
 
   render() {
     return (
