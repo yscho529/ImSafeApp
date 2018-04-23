@@ -36,6 +36,7 @@ export default class Devices extends Component {
             scanning: false,
             peripherals: [],
             connectedDevices: [],
+            selectedDevices: [],
             appState: '',
             removeState: false,
             modalVisible: false,
@@ -158,12 +159,15 @@ export default class Devices extends Component {
         for(i=0; i<parsedResponse.length; i++){
             var contact = parsedResponse[i]
             var num = contact.phoneNumbers[0] === "undefined" ? '' : contact.phoneNumbers[0].number
+            console.log("Sending SMS to: " + num)
+            console.log("Body: " + (emerg_or_cancel ? this.state.emerg_message : this.state.cancel_message))
             SmsAndroid.autoSend(num, (emerg_or_cancel ? this.state.emerg_message : this.state.cancel_message), (fail) => {
                 console.log("Failed with this error: " + fail)
             }, (success) => {
                 console.log("SMS sent successfully");
             });
             if(emerg_or_cancel){
+                console.log(this.state.location_message)
                 SmsAndroid.autoSend(num, this.state.location_message, (fail) => {
                     console.log("Failed with this error: " + fail)
                 }, (success) => {
@@ -183,6 +187,14 @@ export default class Devices extends Component {
     }
 
     removeDevices() {
+        var _e = this.state.connectedDevices
+        for(var device of this.state.selectedContacts){
+            _e = _e.filter(el => el.address !== device.address)
+        }
+
+        // AsyncStorage.setItem('connectedDevices', JSON.stringify(_e));
+        this.setState({ connectedDevices: _e })
+        this.setState({ removeState: false })
     }
 
     openModal(visible) {
@@ -346,7 +358,7 @@ export default class Devices extends Component {
                         <Icon name="bars" size={30} color={'#FD7272'}></Icon>
                     </View>
                 </TouchableOpacity>
-                <View>
+                {/* <View>
                     <Button onPress={this.getsendEmergencyMessage.bind(this)}
                         title="Push"
                         color="#25CCF7"
@@ -357,7 +369,7 @@ export default class Devices extends Component {
                         color="#25CCF7"
                         borderBottomWidth="1"
                     />
-                </View>
+                </View> */}
                 <FlatList data={(this.state.connectedDevices.length > 0 ? this.state.connectedDevices : null)}
                     keyExtractor={item => item.address}
                     extraData={this.state}
