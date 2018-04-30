@@ -48,6 +48,7 @@ export default class Message extends Component {
         await AsyncStorage.setItem('emerg_message', this.state.emerg_message);
         await AsyncStorage.setItem('cancel_message', this.state.cancel_message);
         console.log("saved messages");
+        this.setState({ editState: False });
     }
 
     render() {
